@@ -43,9 +43,6 @@ export default function Landing() {
 
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
                     className="relative z-10 text-center px-6 pt-12 md:pt-20 pb-32 max-w-5xl mx-auto">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-300 text-[10px] md:text-sm mb-8 font-black uppercase tracking-widest">
-                        <Sparkles className="w-4 h-4" /> Powered by Google Gemini 2.5
-                    </div>
                     <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-6">
                         <span className="text-white">The All-in-One</span><br />
                         <span className="gradient-text">Employee Intel</span><br />
