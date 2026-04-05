@@ -9,9 +9,10 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const stored = localStorage.getItem('workspaceai_user');
-        if (stored) {
-            try { setUser(JSON.parse(stored)); } catch { localStorage.removeItem('workspaceai_user'); }
+        // Restore session from localStorage if available
+        const storedUser = JSON.parse(localStorage.getItem('workspaceai_user') || 'null');
+        if (storedUser) {
+            setUser(storedUser);
         }
         setLoading(false);
     }, []);

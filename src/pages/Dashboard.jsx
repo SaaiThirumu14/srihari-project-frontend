@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Brain, LogOut, LayoutDashboard, Users, ClipboardCheck, CalendarCheck, CalendarDays, FileBarChart, Bot, Menu, X,
@@ -16,11 +17,14 @@ const sidebarConfig = {
         { id: 'analytics', label: 'Analytics', icon: BarChart3 },
         { id: 'promotions', label: 'Promotions', icon: Award },
         { id: 'wellness', label: 'Wellness', icon: Heart },
+        { id: 'cafeteria', label: 'Cafeteria', icon: UtensilsCrossed },
         { id: 'security', label: 'Security', icon: Shield },
         { id: 'settings', label: 'Settings', icon: Settings },
     ],
     HR: [
         { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+        { id: 'analytics', label: 'Graph Analytics', icon: BarChart3 },
+        { id: 'promotions', label: 'Promotions', icon: Award },
         { id: 'attendance', label: 'Attendance', icon: CalendarCheck },
         { id: 'leaves', label: 'Leave Requests', icon: CalendarDays },
         { id: 'surveys', label: 'Churn Surveys', icon: FileBarChart },
@@ -28,6 +32,7 @@ const sidebarConfig = {
         { id: 'wellness', label: 'Wellness Analytics', icon: Heart },
         { id: 'chat', label: 'HR Chat', icon: MessageSquare },
         { id: 'chatbot', label: 'AI Assistant', icon: Bot },
+        { id: 'cafeteria', label: 'Cafeteria', icon: UtensilsCrossed },
         { id: 'forecast', label: 'Workforce Forecast', icon: BarChart3 },
     ],
     TeamLeader: [
@@ -36,8 +41,8 @@ const sidebarConfig = {
         { id: 'team', label: 'My Team', icon: Users },
         { id: 'attendance', label: 'Team Attendance', icon: CalendarCheck },
         { id: 'surveys', label: 'Survey Review', icon: FileBarChart },
-        { id: 'promotions', label: 'Promotions', icon: Award },
         { id: 'wellness', label: 'Wellness', icon: Heart },
+        { id: 'promotions', label: 'Promotions', icon: Award },
     ],
     Employee: [
         { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -46,6 +51,7 @@ const sidebarConfig = {
         { id: 'tasks', label: 'My Tasks', icon: ListTodo },
         { id: 'survey', label: 'Churn Survey', icon: ClipboardCheck },
         { id: 'wellness', label: 'Wellness', icon: Heart },
+        { id: 'promotions', label: 'My Promotions', icon: Award },
         { id: 'cafeteria', label: 'Cafeteria', icon: UtensilsCrossed },
         { id: 'rewards', label: 'Rewards', icon: Sparkles },
         { id: 'chat', label: 'HR Chat', icon: MessageSquare },
@@ -56,6 +62,7 @@ const sidebarConfig = {
         { id: 'orders', label: 'Live Orders', icon: ChefHat },
         { id: 'inventory', label: 'Inventory', icon: Package },
         { id: 'polls', label: 'Food Polls', icon: BarChart3 },
+        { id: 'suggestions', label: 'Suggestions', icon: MessageSquare },
     ],
 };
 
@@ -66,6 +73,7 @@ const roleColors = {
 
 export default function Dashboard() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const role = user?.role || 'Employee';
     const items = sidebarConfig[role] || sidebarConfig.Employee;
     const [activeTab, setActiveTab] = useState('overview');
@@ -74,7 +82,7 @@ export default function Dashboard() {
     const renderDashboard = () => {
         switch (role) {
             case 'Admin': return <AdminDashboard activeTab={activeTab} />;
-            case 'HR': return <HRDashboard activeTab={activeTab} />;
+            case 'HR': return <HRDashboard activeTab={activeTab} setActiveTab={setActiveTab} />;
             case 'TeamLeader': return <TeamLeaderDashboard activeTab={activeTab} />;
             case 'Employee': return <EmployeeDashboard activeTab={activeTab} />;
             case 'Chef': return <ChefDashboard activeTab={activeTab} />;
@@ -157,7 +165,7 @@ export default function Dashboard() {
 
                 <div className="p-4 border-t border-white/5">
                     <button 
-                        onClick={logout} 
+                        onClick={() => { logout(); navigate('/login'); }} 
                         className="flex items-center gap-3 px-4 py-3.5 rounded-xl w-full text-left font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all group"
                     >
                         <LogOut className="w-5 h-5 group-hover:translate-x-1 transition-transform" /> 

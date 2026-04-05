@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import API from '../utils/api';
-import { Users, BarChart3, Award, Heart, Shield, Settings, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Users, BarChart3, Award, Heart, Shield, Settings, TrendingUp, AlertTriangle, UtensilsCrossed } from 'lucide-react';
+import CafeteriaView from '../components/CafeteriaView';
+import PromotionsManager from '../components/PromotionsManager';
 
 export default function AdminDashboard({ activeTab }) {
     const { user } = useAuth();
@@ -52,7 +54,7 @@ export default function AdminDashboard({ activeTab }) {
                     <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Score</th><th>Status</th></tr></thead>
                     <tbody>
                         {users.slice(0, 10).map(u => (
-                            <tr key={u._id}>
+                            <tr key={u.id}>
                                 <td className="text-white font-bold">{u.name}</td>
                                 <td className="text-slate-400 font-mono text-xs">{u.email}</td>
                                 <td><span className="badge badge-primary">{u.role}</span></td>
@@ -75,7 +77,7 @@ export default function AdminDashboard({ activeTab }) {
                     <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Points</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>
                         {users.map(u => (
-                            <tr key={u._id}>
+                            <tr key={u.id}>
                                 <td className="text-white font-bold">{u.name}</td>
                                 <td className="text-slate-400 font-mono text-xs">{u.email}</td>
                                 <td><span className="badge badge-primary">{u.role}</span></td>
@@ -84,7 +86,7 @@ export default function AdminDashboard({ activeTab }) {
                                 <td><span className={`badge ${u.promotionStatus === 'Promoted' ? 'badge-success' : u.promotionStatus === 'Eligible' ? 'badge-warning' : 'badge-primary'}`}>{u.promotionStatus}</span></td>
                                 <td>
                                     {u.promotionStatus === 'Pending' && (
-                                        <button onClick={() => { API.put(`/users/${u._id}/promotion`, { promotionStatus: 'Promoted' }).then(() => window.location.reload()); }}
+                                        <button onClick={() => { API.put(`/users/${u.id}/promotion`, { promotionStatus: 'Promoted' }).then(() => window.location.reload()); }}
                                             className="text-[10px] btn-success py-1.5 px-3 uppercase font-black tracking-widest">Promote</button>
                                     )}
                                 </td>
@@ -120,7 +122,7 @@ export default function AdminDashboard({ activeTab }) {
                     <h3 className="text-lg font-semibold text-white mb-4">Performance Overview</h3>
                     <div className="space-y-3">
                         {users.filter(u => u.role === 'Employee').slice(0, 6).map(u => (
-                            <div key={u._id} className="flex items-center gap-3">
+                            <div key={u.id} className="flex items-center gap-3">
                                 <span className="text-sm text-slate-300 w-32 truncate">{u.name}</span>
                                 <div className="flex-1 h-2 rounded-full bg-slate-700">
                                     <div className={`h-full rounded-full ${(u.performance?.overallScore || 0) >= 80 ? 'bg-emerald-500' : (u.performance?.overallScore || 0) >= 50 ? 'bg-amber-500' : 'bg-red-500'}`}
@@ -134,6 +136,9 @@ export default function AdminDashboard({ activeTab }) {
             </div>
         </div>
     );
+
+    if (activeTab === 'cafeteria') return <CafeteriaView />;
+    if (activeTab === 'promotions') return <PromotionsManager />;
 
     return (
         <div className="animate-fade-in">
